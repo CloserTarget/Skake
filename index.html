@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SHAKE DO LOBÃO — Cardápio Digital</title>
+  <style>
+    :root {
+      --purple: #3b0b5a;
+      --purple-2: #4a1976;
+      --neon: #4a1976;
+      --accent-gradient: linear-gradient(90deg, #ff7a18, #ff0066);
+      --card-radius: 18px;
+      font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    /*
+    body {
+      margin: 0;
+      background: radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.02), transparent 20%), var(--purple);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+*/
+
+    body {
+
+      background-image: url("img/body.png");
+      background-size: cover;
+      /* Cobrir toda a tela */
+      background-position: center;
+      /* Centralizar */
+      background-repeat: no-repeat;
+      /* Não repetir */
+      background-attachment: fixed;
+      /* Fixar ao rolar */
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      margin: 0;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 420px;
+      backdrop-filter: blur(20px);
+      /* EFEITO BLUR */
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), transparent 30%), rgba(145, 145, 145, 0.551);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+      position: relative;
+      overflow: hidden
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      gap: 12px
+    }
+
+    .logo {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: var(--neon);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+      flex-shrink: 0;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+    }
+
+    .logo img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%
+    }
+
+    h1 {
+      font-size: 18px;
+      margin: 0;
+      line-height: 1;
+      color: var(--neon);
+      font-weight: 700
+    }
+
+    p.sub {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 12px
+    }
+
+    .categories {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 18px
+    }
+
+    .cat {
+
+      background: rgba(255, 255, 255, 0.1);
+      /* Fundo transparente */
+      backdrop-filter: blur(20px);
+      /* EFEITO BLUR */
+      -webkit-backdrop-filter: blur(20px);
+      /* Para Safari */
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      /* Borda sutil */
+      border-radius: 14px;
+      padding: 12px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      transition: transform .15s ease, box-shadow .15s ease;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .cat:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45)
+    }
+
+    .cat img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 10px
+    }
+
+    .cat .title {
+      font-weight: 800;
+      color: var(--neon);
+      font-size: 14px
+    }
+
+    .products {
+      display: none;
+      margin-top: 18px
+    }
+
+    .products.active {
+      display: block
+    }
+
+    .grid-prod {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px
+    }
+
+    .prod {
+      background: rgba(0, 0, 0, 0.25);
+      padding: 12px;
+      border-radius: 12px;
+      display: flex;
+      gap: 12px;
+      align-items: center
+    }
+
+    .prod img {
+      width: 76px;
+      height: 76px;
+      object-fit: cover;
+      border-radius: 10px
+    }
+
+    .prod .info {
+      flex: 1
+    }
+
+    .prod .info h3 {
+      margin: 0;
+      font-size: 14px
+    }
+
+    .prod .info p {
+      margin: 4px 0 0;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.8)
+    }
+
+    .price {
+      font-weight: 800;
+      color: #ffff;
+    }
+
+
+    .add {
+      background: var(--neon);
+      border: none;
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer
+    }
+
+    .cartbar {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 24px;
+      display: flex;
+      gap: 12px;
+      align-items: center
+    }
+
+    .cartbtn {
+      background: transparent;
+      border: 2px solid var(--neon);
+      padding: 12px 16px;
+      border-radius: 30px;
+      color: #ffff;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none
+    }
+
+    .orderbtn {
+      background: var(--neon);
+      border: none;
+      padding: 12px 20px;
+      border-radius: 30px;
+      color: #ffff;
+      font-weight: 800;
+      cursor: pointer
+    }
+
+    @media (max-width:420px) {
+      .categories {
+        grid-template-columns: 1fr 1fr
+      }
+
+      .cat img {
+        height: 100px
+      }
+
+      .logo {
+        width: 60px;
+        height: 60px
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app" id="app">
+    <header>
+      <div class="logo"><img src="img/body.png" alt="Skina do Açaí" /></div>
+      <div>
+        <h1>SHAKE DO LOBÃO</h1>
+        <p class="sub" style="padding: 20px;">Açaí • acompanhamentos — toque para ver</p>
+      </div>
+    </header>
+
+    <div class="cat" data-cat="PromoçãoDiaria">
+      <img src="img/promo.png"  alt="Açaí" />
+      <div class="title">Acesse aqui</div>
+    </div>
+    <section class="categories" aria-label="Categorias">
+
+      <div class="cat" data-cat="acai">
+        <img src="img/Pmorango.png" alt="Açaí" />
+        <div class="title">AÇAÍ</div>
+      </div>
+      <div class="cat" data-cat="lanches">
+        <img src="img/Agregados.png" alt="Lanches" />
+        <div class="title">Agregados</div>
+      </div>
+    </section>
+
+    <section class="products" id="products">
+      <button id="back" style=" background-color: #3b0b5a; border-radius: 10px;"> Voltar</button>
+      <div id="prod-list" class="grid-prod"></div>
+    </section>
+  </div>
+  <div class="cartbar">
+    <a href="carrinho.html" target="_blank" class="cartbtn">
+      Carrinho (<span id="cart-count">0</span>)
+    </a>
+    <button class="orderbtn" id="whatsapp">Enviar pedido (WhatsApp)</button>
+  </div>
+
+
+  <script>
+    const MENU = {
+      acai: [
+        { id: 'ac1', name: 'Açaí 300ml', desc: 'Açaí Garrafa Puro', price: 12.00, img: 'img/Garrafacai.png' },
+        { id: 'ac2', name: 'Açaí 500ml', desc: 'Açaí Garrafa Puro', price: 16.00, img: 'img/Garrafacai.png' }
+      ],
+      lanches: [
+        { id: 'ln1', name: 'Creme de Ninho', desc: 'Adicional', price: 4.00, img: 'img/CNinho.png' },
+        { id: 'ln2', name: 'Mousse Maracujá', desc: 'Adicional', price: 2.50, img: 'img/MMaracuja.png' },
+        { id: 'ln3', name: 'Mousse Limão', desc: 'Adicional', price: 2.50, img: 'img/MLimão.png' },
+        { id: 'ln4', name: 'Mousse Morango', desc: 'Adicional', price: 2.50, img: 'img/Mmorango.png' },
+        { id: 'ln7', name: 'Banana', desc: 'Adicional', price: 3.00, img: 'img/Pbanana.png' },
+        { id: 'ln8', name: 'Morango', desc: 'Adicional', price: 3.00, img: 'img/Pmorango.png' },
+        { id: 'ln9', name: 'Paçoquinha', desc: 'Adicional', price: 2.50, img: 'img/Paçoquinhas.png' },
+        { id: 'ln10', name: 'Leite Condensado', desc: 'Adicional', price: 2.50, img: 'img/leite-condensado.jpg' },
+        { id: 'ln11', name: 'Leite Ninho', desc: 'Adicional', price: 4.00, img: 'img/leiteempó.webp' },
+        { id: 'ln12', name: 'Ovomaltine', desc: 'Adicional', price: 4.00, img: 'img/ovomaltine.webp' },
+        { id: 'ln13', name: 'Space Ball', desc: 'Adicional', price: 3.00, img: 'img/Space ball.jpg' },
+        { id: 'ln14', name: 'Confete', desc: 'Adicional', price: 3.00, img: 'img/confete.png' },
+        { id: 'ln15', name: 'Bis', desc: 'Adicional', price: 2.50, img: 'img/Bis.png' },
+        { id: 'ln16', name: 'Sonho de Valsa', desc: 'Adicional', price: 3.50, img: 'img/Sonho de valsa.jpg' },
+        { id: 'ln17', name: '', desc: '', price: 0.00, img: 'img/em-breve-1.png' },
+      ],
+
+      PromoçãoDiaria: [
+        { id: 'ln1', name: 'SemPromo', desc: 'Adicional', price: 0.00, img: '' }
+      ]
+    }
+
+    const cart = []
+    const $ = sel => document.querySelector(sel)
+    const $$ = sel => document.querySelectorAll(sel)
+    function formatBRL(v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) }
+
+    $$('.cat').forEach(el => el.addEventListener('click', () => {
+      const cat = el.dataset.cat
+      showProducts(cat)
+    }))
+    $('#back').addEventListener('click', () => {
+      $('#products').classList.remove('active')
+      document.querySelector('.categories').style.display = ''
+    })
+
+    function showProducts(cat) {
+      const list = MENU[cat] || []
+      const container = $('#prod-list')
+      container.innerHTML = ''
+      list.forEach(p => {
+        const item = document.createElement('div')
+        item.className = 'prod'
+        item.innerHTML = `
+          <img src="${p.img}" alt="${p.name}">
+          <div class="info">
+            <h3>${p.name}</h3>
+            <p>${p.desc}</p>
+          </div>
+          <div style="text-align:right">
+            <div class="price">${formatBRL(p.price)}</div>
+            <button class="add" data-id="${p.id}" data-cat="${cat}">+ adicionar</button>
+          </div>
+        `
+        container.appendChild(item)
+      })
+      document.querySelector('.categories').style.display = 'none'
+      $('#products').classList.add('active')
+      container.querySelectorAll('.add').forEach(btn => btn.addEventListener('click', () => {
+        const id = btn.dataset.id
+        const cat = btn.dataset.cat
+        const product = MENU[cat].find(x => x.id === id)
+        addToCart(product)
+      }))
+    }
+
+    function addToCart(product) {
+      const found = cart.find(i => i.id === product.id)
+      if (found) found.qty++
+      else cart.push({ ...product, qty: 1 })
+      updateCartUI()
+    }
+
+    function updateCartUI() {
+      $('#cart-count').textContent = cart.reduce((s, i) => s + i.qty, 0)
+      localStorage.setItem("cart", JSON.stringify(cart))
+    }
+
+    $('#whatsapp').addEventListener('click', () => {
+      const cartData = JSON.stringify(cart)
+      if (cart.length === 0) { alert("Carrinho vazio"); return }
+      localStorage.setItem("cart", cartData)
+      window.open("carrinho.html", "_blank")
+    })
+
+    updateCartUI()
+  </script>
+</body>
+

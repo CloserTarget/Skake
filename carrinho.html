@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Carrinho - Skina do Açaí</title>
+  <style>
+    body {
+      background-image: url("img/body.png");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      margin: 0;
+      padding: 20px;
+      color: #fff;
+      font-family: Inter, Arial
+    }
+
+    h1 {
+      color: #ffdf00;
+      text-align: center;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(10px);
+      padding: 10px;
+      margin: 6px 0;
+      border-radius: 8px
+    }
+
+    .remove {
+      background: red;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      width: 28px;
+      height: 28px;
+      font-weight: bold
+    }
+
+    label {
+      font-size: 14px;
+      margin-top: 8px;
+      display: block
+    }
+
+    input {
+      width: 96%;
+      padding: 8px;
+      margin: 6px 0;
+      border-radius: 6px;
+      border: none
+    }
+
+    select {
+      width: 100%;
+      padding: 8px;
+      margin: 6px 0;
+      border-radius: 6px;
+      border: none
+    }
+
+    .btn {
+      background: #3b0b5a;
+      color: #ffdf00;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 12px;
+      width: 100%
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Seu Carrinho 🛒</h1>
+  <div id="cart-list"></div>
+  <h3>Total: <span id="cart-total">R$ 0,00</span></h3>
+
+  <div>
+    <label>Forma de pagamento:</label>
+    <select id="pagamento">
+      <option value="Pix">Pix</option>
+      <option value="Dinheiro">Dinheiro</option>
+      <option value="Credito">Credito</option>
+      <option value="Debito">Debito</option>
+    </select>
+    <label>Rua:</label><input type="text" id="rua">
+    <label>Número:</label><input type="text" id="numero">
+    <label>Bairro:</label><input type="text" id="bairro">
+    <label>CEP:</label><input type="text" id="cep">
+  </div>
+
+  <button class="btn" id="whatsapp">Enviar Pedido no WhatsApp</button>
+
+  <script>
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]")
+    const list = document.getElementById("cart-list")
+    const totalEl = document.getElementById("cart-total")
+
+    function formatBRL(v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) }
+
+    function renderCart() {
+      list.innerHTML = ""
+      let total = 0
+      cart.forEach((item, idx) => {
+        total += item.price * item.qty
+        const div = document.createElement("div")
+        div.className = "cart-item"
+        div.innerHTML = `
+          <span>${item.name} x${item.qty} - ${formatBRL(item.price * item.qty)}</span>
+          <button class="remove" data-idx="${idx}">x</button>
+        `
+        list.appendChild(div)
+      })
+      totalEl.textContent = formatBRL(total)
+
+      document.querySelectorAll(".remove").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const i = btn.dataset.idx
+          cart.splice(i, 1)
+          localStorage.setItem("cart", JSON.stringify(cart))
+          renderCart()
+        })
+      })
+    }
+
+    function buildWhatsAppMessage() {
+      if (cart.length === 0) return ''
+      let text = '🛒 *Pedido - Shake do Lobão*\n'
+      cart.forEach(it => {
+        text += `- ${it.name} x${it.qty} = ${formatBRL(it.price * it.qty)}\n`
+      })
+      let total = cart.reduce((s, i) => s + i.price * i.qty, 0)
+      text += `\nTotal: ${formatBRL(total)}\n`
+
+      // dados do form
+      const pagamento = document.getElementById("pagamento").value
+      const rua = document.getElementById("rua").value
+      const numero = document.getElementById("numero").value
+      const bairro = document.getElementById("bairro").value
+      const cep = document.getElementById("cep").value
+
+      text += `\n*Pagamento:* ${pagamento}`
+      text += `\n*Endereço:* Rua ${rua}, Nº ${numero}, Bairro ${bairro}, CEP ${cep}`
+
+      return text
+    }
+
+    document.getElementById("whatsapp").addEventListener("click", () => {
+      const msg = encodeURIComponent(buildWhatsAppMessage()) // 🔥 encodeURIComponent
+      if (!msg) { alert('Carrinho vazio'); return }
+      const phone = "553591710322" // número da loja
+      window.open(`https://wa.me/${phone}?text=${msg}`, "_blank")
+    })
+
+    renderCart()
+  </script>
+</body>
+
